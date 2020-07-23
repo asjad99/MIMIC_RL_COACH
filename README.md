@@ -7,7 +7,6 @@ We cover teh following
 
 - Data Acquisition 
 - Pre-Processing 
-- Exploring 
 - Feature Encoding
 - Modeling 
 ----------------------------------------------------
@@ -191,6 +190,95 @@ Create Materialised views:
  
  then run 
 concepts/postgres_make_concepts.sh 
+
+----------------------------------------------------
+
+### PreProcessing
+
+For pre-processing we will rely on this code (a library built in an effort to promote reproducibility in research)
+
+https://github.com/MLforHealth/MIMIC_Extract
+
+
+library: 
+paper: https://arxiv.org/pdf/1907.08322.pdf
+This helps us with Data Extraction and Preprocessing. 
+
+
+
+#### Step 1: modify 
+
+https://github.com/MLforHealth/MIMIC_Extract/blob/455a2484c1fd2de3809ec2aa52897717379dc1b7/utils/setup_user_env.sh
+
+and then do: 
+
+
+    source ./setup_user_env.sh
+
+
+
+#### Step 2: install and create conda enviornment
+
+
+    # Go to home directory
+    cd ~
+    
+    # You can change what anaconda version you want at 
+    # https://repo.continuum.io/archive/
+    wget https://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
+    bash Anaconda2-4.2.0-Linux-x86_64.sh -b -p ~/anaconda
+    rm Anaconda2-4.2.0-Linux-x86_64.sh
+    echo 'export PATH="~/anaconda/bin:$PATH"' >> ~/.bashrc 
+    
+    # Reload default profile
+    source ~/.bashrc
+    
+    conda update conda
+
+
+After installation we will create a new environment: 
+
+
+    conda env create --force -f ../mimic_extract_env.yml
+     source activate mimic_data_extraction
+
+Now we have to make a few edit in the mimic_direct_extract.py file: 
+
+Firstly line 400 we change ventilationdurations to ventilation_durations
+
+Similarly Edit the following line  439 from: 
+
+
+    ``` table_names = ['vasopressordurations', 'adenosinedurations', 'dobutaminedurations', 'dopaminedurations', 'epinephrinedurations', 'isupreldurations', 
+        #                'milrinonedurations', 'norepinephrinedurations', 'phenylephrinedurations', 'vasopressindurations']```
+
+to
+
+
+     ``` table_names = ['vasopressor_durations', 'adenosine_durations', 'dobutamine_durations', 'dopamine_durations', 'epinephrine_durations', 'isuprel_durations', 
+                        'milrinone_durations', 'norepinephrine_durations', 'phenylephrine_durations', 'vasopress_indurations']```
+
+  
+
+After that run (preferably under screen): 
+
+ ```   make build_curated_from_psql ```
+
+
+make sure enough space on hardrive: 
+
+   ``` lsblk
+    sudo growpart /dev/nvme0n1 1 ```
+
+
+#### Final Output: 
+
+
+![](https://paper-attachments.dropbox.com/s_9C453E0E6A99C23A853A12A22A94087A14951068B3D837D1A2BDE0BFBFDEAD7A_1594286931904_Screen+Shot+2020-07-09+at+7.28.34+pm.png)
+
+
+From the MIMIC relational database, SQL query results are processed to generate four output tables. 
+
 
 ----------------------------------------------------
 
