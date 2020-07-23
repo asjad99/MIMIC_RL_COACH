@@ -7,7 +7,7 @@ We cover teh following
 
 - Data Acquisition 
 - Pre-Processing 
-- Feature Encoding
+- Creating Trajectories (Episodes) and Feature Encoding
 - Modeling 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -191,7 +191,7 @@ Create Materialised views:
  then run 
 concepts/postgres_make_concepts.sh 
 
-----------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 
 ### PreProcessing
 
@@ -261,14 +261,12 @@ to
   
 
 After that run (preferably under screen): 
-
- ```   make build_curated_from_psql ```
+``` make build_curated_from_psql```
 
 
 make sure enough space on hardrive: 
 
-   ``` lsblk
-    sudo growpart /dev/nvme0n1 1 ```
+   ``` lsblk  sudo growpart /dev/nvme0n1 1 ```
 
 
 #### Final Output: 
@@ -280,5 +278,104 @@ make sure enough space on hardrive:
 From the MIMIC relational database, SQL query results are processed to generate four output tables. 
 
 
-----------------------------------------------------
 
+see https://arxiv.org/pdf/1907.08322.pdf for details
+
+--------------------------------------------------------------------------------------------------------
+
+### Creating Trajectories (Episodes) and Feature Encoding
+
+See the Notebook MIMIC_RL 
+
+Input: 
+
+we provide the input with follwoing files(obtained from last step)
+
+```
+X = pd.read_hdf(DATAFILE,'vitals_labs')
+Y = pd.read_hdf(DATAFILE,'interventions')
+static = pd.read_hdf(DATAFILE,'patients')
+
+```
+
+output: 
+
+```
+
+action,all_action_probabilities,episode_id,episode_name,reward,transition_number,state_feature_0,state_feature_1,state_feature_2,state_feature_3,state_feature_4,state_feature_5,state_feature_6,state_feature_7,state_feature_8,state_feature_9,state_feature_10,state_feature_11,state_feature_12,state_feature_13,state_feature_14,state_feature_15,state_feature_16,state_feature_17,state_feature_18,state_feature_19,state_feature_20,state_feature_21,state_feature_22
+1,"[1, 1, 1, 1]",3,mimic_RL,0,0,0.4766666666666667,0.2770745804541222,0.74,0.05333333333333334,0.30600214362272243,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0
+3,"[1, 1, 1, 1]",3,mimic_RL,0,1,0.5125,0.13713081275360495,0.74,0.051666666666666666,0.2604501607717042,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0
+3,"[1, 1, 1, 1]",3,mimic_RL,0,2,0.45916666666666667,0.1557665092532645,0.985,0.023333333333333334,0.2915326902465166,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0
+
+```
+
+--------------------------------------------------------------------------------------------------------
+
+
+### Modeling with Intel Coach
+
+
+
+#### prerequisites for intel coach: 
+
+
+```
+
+# General
+sudo -E apt-get install python3-pip cmake zlib1g-dev python3-tk python-opencv -y
+
+# Boost libraries
+sudo -E apt-get install libboost-all-dev -y
+
+# Scipy requirements
+sudo -E apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran -y
+
+# PyGame
+sudo -E apt-get install libsdl-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+libsmpeg-dev libportmidi-dev libavformat-dev libswscale-dev -y
+
+# Dashboard
+sudo -E apt-get install dpkg-dev build-essential python3.5-dev libjpeg-dev  libtiff-dev libsdl1.2-dev libnotify-dev 
+freeglut3 freeglut3-dev libsm-dev libgtk2.0-dev libgtk-3-dev libwebkitgtk-dev libgtk-3-dev libwebkitgtk-3.0-dev
+libgstreamer-plugins-base1.0-dev -y
+
+# Gym
+sudo -E apt-get install libav-tools libsdl2-dev swig cmake -y
+
+```
+
+
+#### Virtualenv installation: 
+
+```
+sudo -E pip3 install virtualenv
+virtualenv -p python3 coach_env
+. coach_env/bin/activate
+
+```
+
+### Install from repo: 
+
+
+```
+git clone https://github.com/NervanaSystems/coach.git
+
+cd coach
+pip3 install -e .
+
+```
+
+### Modeling 
+
+see Notebook: 
+
+input: /coach/
+
+output: ./tmp/
+
+3 kinds of ouputs available to us: 
+
+
+we can use tensorboard to visualize the training process  
+
+checkpoints 
