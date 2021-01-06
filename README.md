@@ -1,8 +1,8 @@
 ### ABOUT 
 
-This experiment was done to demonstrate how batch RL for Decision Support for clinicians 
+This experiment was done to demonstrate how batch Reinforcement learning can be used for Decision Support in Clinical Settings
 
-We cover teh following 
+We cover the following 
 
 
 - Data Acquisition 
