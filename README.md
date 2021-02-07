@@ -365,17 +365,35 @@ pip3 install -e .
 
 ```
 
-### Modeling 
+## Modeling Using Intel Coach 
 
-see Notebook: 
+
+Machine Specs: 
+
+
+
+----------------------------------------------------------------
+ In our experiment we focus on popular state-of-the-art algorithms such as :
+ 
+ - Deep Q Learning(DQN)
+ - Double Deep Q Learning (DDQN)
+ - DDQN combined with BNC,
+ - Mixed Monte Carlo(MMC)
+ - Persistent Advantage Learning (PAL). 
+ 
+
+see Notebook: https://github.com/asjad99/MIMIC_RL_COACH/blob/master/MIMIC_RL.ipynb
 
 input: /coach/
 
 output: ./tmp/
 
+----------------------------------------------------------------
+#### OUTPUTS: 
+
+we rely on various well known off-policy and counterfactual policy evaluation (CPE/OPE) metrics to give us expected performance of the newly trained RL model without having to deploy it
+
 3 kinds of ouputs available to us: 
-
-
 we can use tensorboard to visualize the training process  
 
 checkpoints 
