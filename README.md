@@ -1,6 +1,8 @@
 ### ABOUT 
 
-This experiment was done to demonstrate how batch Reinforcement learning can be used for Decision Support in Clinical Settings
+This experiment was done to demonstrate how batch Reinforcement learning can be used for Decision Support in Clinical Settings.
+
+See Blog post for more details: https://www.asjadk.io/decision_support/
 
 We cover the following 
 
